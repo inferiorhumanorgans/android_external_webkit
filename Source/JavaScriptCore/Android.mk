@@ -37,6 +37,7 @@ LOCAL_SRC_FILES := \
 	\
 	assembler/ARMv7Assembler.cpp \
 	assembler/ARMAssembler.cpp \
+	assembler/MacroAssemblerARM.cpp \
 	\
 	bytecode/CodeBlock.cpp \
 	bytecode/JumpTable.cpp \
@@ -73,7 +74,9 @@ LOCAL_SRC_FILES := \
 	jit/JITCall.cpp \
 	jit/JITCall32_64.cpp \
 	jit/JITOpcodes.cpp \
+	jit/JITOpcodes32_64.cpp \
 	jit/JITPropertyAccess.cpp \
+	jit/JITPropertyAccess32_64.cpp \
 	jit/JITStubs.cpp \
 	jit/ThunkGenerators.cpp \
 	\
