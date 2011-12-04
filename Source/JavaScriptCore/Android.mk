@@ -36,6 +36,7 @@ LOCAL_SRC_FILES := \
 	API/OpaqueJSString.cpp \
 	\
 	assembler/ARMv7Assembler.cpp \
+	assembler/ARMAssembler.cpp \
 	\
 	bytecode/CodeBlock.cpp \
 	bytecode/JumpTable.cpp \
