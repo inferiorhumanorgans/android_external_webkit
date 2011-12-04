@@ -23,6 +23,8 @@
 ## OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##
 
+LOCAL_ARM_MODE := arm
+
 LOCAL_SRC_FILES := \
 	API/JSValueRef.cpp \
 	API/JSCallbackConstructor.cpp \
