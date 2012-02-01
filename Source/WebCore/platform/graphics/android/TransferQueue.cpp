@@ -50,7 +50,7 @@
 
 #endif // DEBUG
 
-#define ST_BUFFER_NUMBER 4
+#define ST_BUFFER_NUMBER 6
 
 // Set this to 1 if we would like to take the new GpuUpload approach which
 // relied on the glCopyTexSubImage2D instead of a glDraw call
@@ -297,8 +297,11 @@ void TransferQueue::updateDirtyBaseTiles()
             BaseTileTexture* destTexture = 0;
             if (!obsoleteBaseTile)
                 destTexture = m_transferQueue[index].savedBaseTilePtr->backTexture();
-            if (m_transferQueue[index].uploadType == GpuUpload)
-                m_sharedSurfaceTexture->updateTexImage();
+            if (m_transferQueue[index].uploadType == GpuUpload) {
+                status_t result = m_sharedSurfaceTexture->updateTexImage();
+                if (result != OK)
+                    XLOGC("unexpected error: updateTexImage return %d", result);
+            }
             m_transferQueue[index].savedBaseTilePtr = 0;
             m_transferQueue[index].status = emptyItem;
             if (obsoleteBaseTile) {
@@ -470,10 +473,17 @@ void TransferQueue::addItemInTransferQueue(const TileRenderInfo* renderInfo,
 
 void TransferQueue::setTextureUploadType(TextureUploadType type)
 {
+    if (m_currentUploadType == type)
+        return;
+
     discardQueue();
 
     android::Mutex::Autolock lock(m_transferQueueItemLocks);
+#ifdef FORCE_CPU_UPLOAD
+    m_currentUploadType = CpuUpload; // force to cpu upload mode for now until gpu upload mode is fixed
+#else
     m_currentUploadType = type;
+#endif
     XLOGC("Now we set the upload to %s", m_currentUploadType == GpuUpload ? "GpuUpload" : "CpuUpload");
 }
 
@@ -488,8 +498,11 @@ void TransferQueue::cleanupTransportQueue()
             // No matter what the current upload type is, as long as there has
             // been a Surf Tex enqueue operation, this updateTexImage need to
             // be called to keep things in sync.
-            if (m_transferQueue[index].uploadType == GpuUpload)
-                m_sharedSurfaceTexture->updateTexImage();
+            if (m_transferQueue[index].uploadType == GpuUpload) {
+                status_t result = m_sharedSurfaceTexture->updateTexImage();
+                if (result != OK)
+                    XLOGC("unexpected error: updateTexImage return %d", result);
+            }
 
             // since tiles in the queue may be from another webview, remove
             // their textures so that they will be repainted / retransferred

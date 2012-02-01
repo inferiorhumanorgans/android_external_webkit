@@ -680,7 +680,8 @@ LOCAL_SRC_FILES := $(LOCAL_SRC_FILES) \
 	platform/graphics/android/TiledPage.cpp \
 	platform/graphics/android/TiledTexture.cpp \
 	platform/graphics/android/TransferQueue.cpp \
-	platform/graphics/android/UpdateManager.cpp \
+	platform/graphics/android/TreeManager.cpp \
+	platform/graphics/android/VerticalTextMap.cpp \
 	platform/graphics/android/VideoLayerAndroid.cpp \
 	platform/graphics/android/VideoLayerManager.cpp \
 	platform/graphics/android/ZoomManager.cpp \
@@ -1256,4 +1257,9 @@ LOCAL_SRC_FILES := $(LOCAL_SRC_FILES) \
 ifeq ($(SUPPORT_COMPLEX_SCRIPTS),true)
 LOCAL_SRC_FILES := $(LOCAL_SRC_FILES) \
 	platform/graphics/android/HarfbuzzSkia.cpp
+endif
+
+# HACK for qcom devices CPU upload mode
+ifeq ($(TARGET_FORCE_CPU_UPLOAD),true)
+LOCAL_CFLAGS += -DFORCE_CPU_UPLOAD
 endif
